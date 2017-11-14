@@ -6,7 +6,7 @@ class Literal {
     int numConstants = 0;
     int numVariables = 0;
 
-    public Literal(String name, Term[] terms, boolean isNegated) {
+    Literal(String name, Term[] terms, boolean isNegated) {
         this.name = name;
         this.terms = terms;
         this.isNegated = isNegated;
@@ -19,7 +19,7 @@ class Literal {
         }
     }
 
-    public Term[] getTerms() {
+    Term[] getTerms() {
         return terms;
     }
 

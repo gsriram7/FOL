@@ -2,6 +2,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -43,4 +44,11 @@ public class LiteralTest {
         assertThat(criminal.canUnify(), is(true));
     }
 
+    @Test
+    public void shouldReturnAllTerms() throws Exception {
+        Term[] terms = new Term[]{new Variable("x"), new Variable("y"), new Variable("z")};
+        Literal sells = new Literal("Sells", terms, true);
+
+        assertThat(Arrays.stream(sells.getTerms()).map(Term::getName).reduce(String::concat).get(), is("xyz"));
+    }
 }
