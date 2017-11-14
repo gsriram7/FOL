@@ -51,4 +51,14 @@ public class LiteralTest {
 
         assertThat(Arrays.stream(sells.getTerms()).map(Term::getName).reduce(String::concat).get(), is("xyz"));
     }
+
+    @Test
+    public void shouldGetNumberOfConstantsAndVariables() throws Exception {
+        Term[] terms = new Term[]{new Variable("z"), new Constant("America")};
+
+        Literal enemy = new Literal("Enemy", terms, true);
+
+        assertThat(enemy.numConstants, is(1));
+        assertThat(enemy.numVariables, is(1));
+    }
 }

@@ -11,11 +11,10 @@ class Literal {
         this.terms = terms;
         this.isNegated = isNegated;
         numTerms = terms.length;
-        for (Term term : terms) {
-            if (term instanceof Constant)
-                numConstants++;
-            else
-                numVariables++;
+        this.terms = new Term[terms.length];
+        for (int i = 0; i < terms.length; i++) {
+            terms[i] = terms[i];
+            if (terms[i] instanceof Constant) numConstants++; else numVariables++;
         }
     }
 
@@ -25,5 +24,9 @@ class Literal {
 
     boolean canUnify() {
         return numVariables == 0;
+    }
+
+    Literal refute() {
+        return new Literal(name, terms, !isNegated);
     }
 }
