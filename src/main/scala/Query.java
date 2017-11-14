@@ -1,7 +1,7 @@
 public class Query {
-    SimpleSentence sentence;
+    Literal literal;
 
-    public Query(SimpleSentence sentence) {
-        this.sentence = sentence;
+    public Query(Literal literal) {
+        this.literal = literal;
     }
 }

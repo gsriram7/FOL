@@ -1,31 +1,29 @@
-public interface Term {
-    String getName();
+
+abstract class Term {
+    private String name;
+    protected Enum<Type> type;
+
+    Term(String name, Type type) {
+        this.name = name;
+        this.type = type;
+    }
+
+    String getName() {
+        return name;
+    }
 }
 
-class Constant implements Term {
-
-    private String name;
+class Constant extends Term {
 
     Constant(String name) {
-        this.name = name;
+        super(name, Type.CONSTANT);
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
 }
 
-class Variable implements Term {
-
-    private String name;
+class Variable extends Term {
 
     Variable(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(name, Type.VARIABLE);
     }
 }

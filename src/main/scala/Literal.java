@@ -1,29 +1,29 @@
-public interface Literal {
-    Term[] getTerm();
-}
-
-class SimpleLiteral implements Literal {
-    Term term;
-
-    public SimpleLiteral(Term term) {
-        this.term = term;
-    }
-
-    @Override
-    public Term[] getTerm() {
-        return new Term[]{term};
-    }
-}
-
-class ComplexLiteral implements Literal {
+class Literal {
+    String name;
     Term[] terms;
+    boolean isNegated;
+    private final int numTerms;
+    int numConstants = 0;
+    int numVariables = 0;
 
-    public ComplexLiteral(Term[] terms) {
+    public Literal(String name, Term[] terms, boolean isNegated) {
+        this.name = name;
         this.terms = terms;
+        this.isNegated = isNegated;
+        numTerms = terms.length;
+        for (Term term : terms) {
+            if (term instanceof Constant)
+                numConstants++;
+            else
+                numVariables++;
+        }
     }
 
-    @Override
-    public Term[] getTerm() {
+    public Term[] getTerms() {
         return terms;
+    }
+
+    boolean canUnify() {
+        return numVariables == 0;
     }
 }
