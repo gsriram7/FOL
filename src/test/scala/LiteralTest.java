@@ -17,21 +17,22 @@ public class LiteralTest {
 
     @Test
     public void shouldTestLiteralInit() throws Exception {
-        Term[] terms = new Term[1];
+        Term[] terms1 = new Term[]{new Variable("x")};
+        Term[] terms2 = new Term[]{new Variable("x")};
 
-        terms[0] = new Variable("x");
-
-        literals.add(new Literal("American", terms, true));
+        literals.add(new Literal("American", terms1, true));
+        literals.add(new Literal("Missile", terms2, false));
 
         assertThat(literals.stream().filter(l -> l.isNegated).count(), is(1L));
+        assertThat(literals.stream().filter(l -> !l.isNegated).count(), is(1L));
         assertThat(literals.stream().filter(Literal::canUnify).count(), is(0L));
     }
 
     @Test
     public void shouldTestComplexLiteralInit() throws Exception {
-        Term[] terms1 = new Term[]{ new Variable("x"), new Variable("y"), new Variable("z") };
-        Term[] terms2 = new Term[]{ new Variable("z"), new Constant("America") };
-        Term[] terms3 = new Term[]{ new Constant("West") };
+        Term[] terms1 = new Term[]{new Variable("x"), new Variable("y"), new Variable("z")};
+        Term[] terms2 = new Term[]{new Variable("z"), new Constant("America")};
+        Term[] terms3 = new Term[]{new Constant("West")};
 
         Literal sells = new Literal("Sells", terms1, true);
         Literal enemy = new Literal("Enemy", terms2, true);
