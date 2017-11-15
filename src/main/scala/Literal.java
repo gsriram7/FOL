@@ -8,12 +8,11 @@ class Literal {
 
     Literal(String name, Term[] terms, boolean isNegated) {
         this.name = name;
-        this.terms = terms;
         this.isNegated = isNegated;
         numTerms = terms.length;
         this.terms = new Term[terms.length];
         for (int i = 0; i < terms.length; i++) {
-            terms[i] = terms[i];
+            this.terms[i] = terms[i];
             if (terms[i] instanceof Constant) numConstants++; else numVariables++;
         }
     }

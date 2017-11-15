@@ -1,13 +1,11 @@
-import java.util.ArrayList;
-
 class Sentence {
-    ArrayList<Literal> literals;
+    Literal[] literals;
 
-    public Sentence(ArrayList<Literal> literals) {
+    Sentence(Literal[] literals) {
         this.literals = literals;
     }
 
-    public ArrayList<Literal> getLiterals() {
+    Literal[] getLiterals() {
         return literals;
     }
 }

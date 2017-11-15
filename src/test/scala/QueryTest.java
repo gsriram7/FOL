@@ -9,6 +9,6 @@ public class QueryTest {
     public void shouldReturnRefutedSentenceFromQuery() throws Exception {
         Query query = new Query(new Literal("Criminal", new Term[]{new Constant("West")}, false));
 
-        assertThat(query.refute().getLiterals().get(0).isNegated, is(true));
+        assertThat(query.refute().getLiterals()[0].isNegated, is(true));
     }
 }

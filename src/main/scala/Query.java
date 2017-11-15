@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Query {
     Literal literal;
 
@@ -8,8 +6,7 @@ public class Query {
     }
 
     public Sentence refute() {
-        ArrayList<Literal> list = new ArrayList<>();
-        list.add(literal.refute());
+        Literal[] list = new Literal[]{literal.refute()};
         return new Sentence(list);
     }
 }
