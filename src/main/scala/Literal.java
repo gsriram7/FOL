@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 class Literal {
     String name;
     Term[] terms;
@@ -27,5 +30,13 @@ class Literal {
 
     Literal refute() {
         return new Literal(name, terms, !isNegated);
+    }
+
+    @Override
+    public String toString() {
+        String prepend = isNegated ? "~" : "";
+        String allTerms = Arrays.stream(terms).map(Term::toString).collect(Collectors.joining(","));
+
+        return prepend + name + "(" + allTerms + ")";
     }
 }

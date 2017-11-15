@@ -29,6 +29,11 @@ abstract class Term {
         result = 31 * result + type.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 
 class Constant extends Term {

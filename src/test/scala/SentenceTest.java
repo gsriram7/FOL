@@ -26,5 +26,7 @@ public class SentenceTest {
         assertThat(literals[2].getTerms()[0], is(sellsTerms[0]));
         assertThat(literals[2].getTerms()[1], is(sellsTerms[1]));
         assertThat(literals[2].getTerms()[2], is(sellsTerms[2]));
+
+        System.out.println(sentence);
     }
 }
