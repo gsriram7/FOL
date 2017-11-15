@@ -61,4 +61,17 @@ public class LiteralTest {
         assertThat(enemy.numConstants, is(1));
         assertThat(enemy.numVariables, is(1));
     }
+
+    @Test
+    public void shouldCheckForTerms() throws Exception {
+        Term[] terms = new Term[]{new Variable("z"), new Constant("America")};
+
+        Literal enemy = new Literal("Enemy", terms, true);
+
+        Term[] ts = enemy.getTerms();
+
+        assertThat(ts.length, is(2));
+        assertThat(ts[0], is(terms[0]));
+        assertThat(ts[1], is(terms[1]));
+    }
 }
