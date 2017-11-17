@@ -1,6 +1,11 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -74,5 +79,20 @@ public class SentenceTest {
         assertThat(s.unifiable(q3), is(false));
         assertThat(s.unifiable(q4), is(false));
         assertThat(s.unifiable(q5), is(false));
+    }
+
+    @Test
+    public void shouldTestIfASentenceWithMultipleLiteralsAreUnifiable() throws Exception {
+        List<Literal> literalList = IntStream.range(2, 100).mapToObj(i -> new Literal("Missle" + i, new Term[]{new Constant("X1")}, false)).collect(Collectors.toList());
+
+        Sentence q1 = new Sentence(literalList.toArray(new Literal[literalList.size()]));
+
+        assertThat(s.unifiable(q1), is(false));
+
+        literalList.add(new Literal("Missile", new Term[]{new Constant("X1")}, false));
+
+        Sentence q2 = new Sentence(literalList.toArray(new Literal[literalList.size()]));
+
+        assertThat(s.unifiable(q2), is(true));
     }
 }
