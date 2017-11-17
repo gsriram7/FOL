@@ -1,7 +1,12 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -94,5 +99,26 @@ public class SentenceTest {
         Sentence q2 = new Sentence(literalList.toArray(new Literal[literalList.size()]));
 
         assertThat(s.unifiable(q2), is(true));
+    }
+
+    @Test
+    public void shouldTestUnifiableWithSampleInput() throws Exception {
+        File file = new File(this.getClass().getResource("ip1.txt").getFile());
+        BufferedReader br = new BufferedReader(new FileReader(file));
+
+        List<String> lines = br.lines().collect(Collectors.toList());
+        br.close();
+
+        List<Sentence> sentences = lines.stream().skip(6).map(Parser::parseSentence).collect(Collectors.toList());
+
+        lines.stream().limit(6).forEach(l -> printUnifiableSentences(sentences, l));
+
+    }
+
+    private void printUnifiableSentences(List<Sentence> sentences, String l) {
+        Sentence q = Parser.parseSentence(l);
+        System.out.println(q);
+        sentences.stream().filter(sent -> sent.unifiable(q)).forEach(System.out::println);
+        System.out.println();
     }
 }
