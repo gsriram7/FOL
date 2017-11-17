@@ -24,15 +24,14 @@ class Sentence {
     }
 
     boolean unifiable(Sentence s) {
-        boolean isUnifiable = false;
         for (Literal literal : s.getLiterals()) {
             if (literal.isNegated && positiveLiteral.containsKey(literal.name))
-                isUnifiable = true;
+                return true;
             else if (!literal.isNegated && negativeLiteral.containsKey(literal.name))
-                isUnifiable = false;
+                return true;
         }
 
-        return isUnifiable;
+        return false;
     }
 
 //    Sentence unify(Sentence sentence) {
