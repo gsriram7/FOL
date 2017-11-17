@@ -29,4 +29,22 @@ public class SentenceTest {
 
         System.out.println(sentence);
     }
+
+    @Test
+    public void shouldCachePositiveAndNegativeLiterals() throws Exception {
+        Term[] missileTerms = {new Variable("x")};
+        Term[] ownsTerms = {new Constant("Nono"), new Variable("x")};
+        Term[] sellsTerms = {new Constant("West"), new Variable("x"), new Constant("Nono")};
+
+        Literal missile = new Literal("Missile", missileTerms, true);
+        Literal owns = new Literal("Owns", ownsTerms, true);
+        Literal sells = new Literal("Sells", sellsTerms, false);
+
+        Sentence sentence = new Sentence(new Literal[]{missile, owns, sells});
+
+        assertThat(sentence.positiveLiteral.size(), is(1));
+        assertThat(sentence.negativeLiteral.size(), is(2));
+        assertThat(sentence.positiveLiteral.containsKey("Sells"), is(true));
+        assertThat(sentence.negativeLiteral.containsKey("Sells"), is(false));
+    }
 }
