@@ -47,4 +47,11 @@ public class SentenceTest {
         assertThat(sentence.positiveLiteral.containsKey("Sells"), is(true));
         assertThat(sentence.negativeLiteral.containsKey("Sells"), is(false));
     }
+
+    @Test
+    public void shouldTestIfTheSentenceIsEmpty() throws Exception {
+        Sentence sentence = new Sentence(new Literal[]{});
+
+        assertThat(sentence.isEmpty(), is(true));
+    }
 }

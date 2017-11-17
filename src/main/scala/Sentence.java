@@ -35,6 +35,13 @@ class Sentence {
         return isUnifiable;
     }
 
+//    Sentence unify(Sentence sentence) {
+//        if (!unifiable(sentence))
+//            return new Sentence(new Literal[]{});
+//
+//
+//    }
+
     boolean isEmpty(){return literals.length == 0;}
 
     @Override
