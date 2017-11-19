@@ -39,4 +39,31 @@ class Literal {
 
         return prepend + name + "(" + allTerms + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Literal literal = (Literal) o;
+
+        if (isNegated != literal.isNegated) return false;
+        if (numTerms != literal.numTerms) return false;
+        if (numConstants != literal.numConstants) return false;
+        if (numVariables != literal.numVariables) return false;
+        if (!name.equals(literal.name)) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        return Arrays.equals(terms, literal.terms);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + Arrays.hashCode(terms);
+        result = 31 * result + (isNegated ? 1 : 0);
+        result = 31 * result + numTerms;
+        result = 31 * result + numConstants;
+        result = 31 * result + numVariables;
+        return result;
+    }
 }

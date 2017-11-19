@@ -88,7 +88,7 @@ public class SentenceTest {
 
     @Test
     public void shouldTestIfASentenceWithMultipleLiteralsAreUnifiable() throws Exception {
-        List<Literal> literalList = IntStream.range(2, 100).mapToObj(i -> new Literal("Missle" + i, new Term[]{new Constant("X1")}, false)).collect(Collectors.toList());
+        List<Literal> literalList = IntStream.range(2, 100).mapToObj(i -> new Literal("Missile" + i, new Term[]{new Constant("X1")}, false)).collect(Collectors.toList());
 
         Sentence q1 = new Sentence(literalList.toArray(new Literal[literalList.size()]));
 
@@ -117,7 +117,7 @@ public class SentenceTest {
 
     private void printUnifiableSentences(List<Sentence> sentences, String l) {
         Sentence q = Parser.parseSentence(l);
-        System.out.println(q);
+        System.out.println(q + "\n---------");
         sentences.stream().filter(sent -> sent.unifiable(q)).forEach(System.out::println);
         System.out.println();
     }

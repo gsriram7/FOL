@@ -25,28 +25,24 @@ class Sentence {
 
     boolean unifiable(Sentence s) {
         for (Literal literal : s.getLiterals()) {
-            if (literal.isNegated && positiveLiteral.containsKey(literal.name))
-                return true;
-            else if (!literal.isNegated && negativeLiteral.containsKey(literal.name))
+            if (unifiable(literal))
                 return true;
         }
-
         return false;
     }
 
-//    Sentence unify(Sentence sentence) {
-//        if (!unifiable(sentence))
-//            return new Sentence(new Literal[]{});
-//
-//
-//    }
+    boolean unifiable(Literal literal) {
+        if (literal.isNegated && positiveLiteral.containsKey(literal.name))
+            return true;
+        else if (!literal.isNegated && negativeLiteral.containsKey(literal.name))
+            return true;
+        else return false;
+    }
 
     boolean isEmpty(){return literals.length == 0;}
 
     @Override
     public String toString() {
-        String literals = Arrays.stream(this.literals).map(Literal::toString).collect(Collectors.joining(" | "));
-
-        return literals;
+        return Arrays.stream(this.literals).map(Literal::toString).collect(Collectors.joining(" | "));
     }
 }
