@@ -45,4 +45,26 @@ class Sentence {
     public String toString() {
         return Arrays.stream(this.literals).map(Literal::toString).collect(Collectors.joining(" | "));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sentence sentence = (Sentence) o;
+
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(literals, sentence.literals)) return false;
+        if (positiveLiteral != null ? !positiveLiteral.equals(sentence.positiveLiteral) : sentence.positiveLiteral != null)
+            return false;
+        return negativeLiteral != null ? negativeLiteral.equals(sentence.negativeLiteral) : sentence.negativeLiteral == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(literals);
+        result = 31 * result + (positiveLiteral != null ? positiveLiteral.hashCode() : 0);
+        result = 31 * result + (negativeLiteral != null ? negativeLiteral.hashCode() : 0);
+        return result;
+    }
 }
