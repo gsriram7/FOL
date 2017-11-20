@@ -136,4 +136,16 @@ public class UnifierTest {
         assertThat(s1, is(Parser.parseSentence("~D(John,y)")));
         assertThat(s2, is(Parser.parseSentence("~Owns(Nono,X1) | Sells(West,X1,Nono)")));
     }
+
+    @Test
+    public void shouldUnifyATuple() throws Exception {
+        Tuple t1 = new Tuple(Parser.parseSentence("H(John)"), Parser.parseSentence("~D(x,y) | ~H(x)"), Parser.parseLiteral("H(John)"));
+        Tuple t2 = new Tuple(Parser.parseSentence("Missile(X1)"), Parser.parseSentence("~Missile(x) | ~Owns(Nono,x) | Sells(West,x,Nono)"), Parser.parseLiteral("Missile(X1)"));
+        Sentence s1 = Unifier.unify(t1);
+        Sentence s2 = Unifier.unify(t2);
+
+        assertThat(s1 instanceof FailureSentence, is(false));
+        assertThat(s1, is(Parser.parseSentence("~D(John,y)")));
+        assertThat(s2, is(Parser.parseSentence("~Owns(Nono,X1) | Sells(West,X1,Nono)")));
+    }
 }
