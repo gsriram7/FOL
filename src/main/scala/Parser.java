@@ -12,7 +12,7 @@ class Parser {
     }
 
     static Literal parseLiteral(String literal) {
-        String cleansed = literal.trim();
+        String cleansed = literal.trim().replace(" ", "");
         boolean isNegated = false;
 
         if (cleansed.charAt(0) == '~') {

@@ -39,6 +39,20 @@ class Sentence {
         else return false;
     }
 
+    Literal[] removeLiteral(Literal lit) {
+        Literal[] newLiterals = new Literal[this.literals.length - 1];
+
+        int j = 0;
+        for (int i = 0; i < literals.length; i++) {
+            if (!literals[i].equals(lit)) {
+                newLiterals[j] = literals[i];
+                j++;
+            }
+        }
+
+        return newLiterals;
+    }
+
     boolean isEmpty(){return literals.length == 0;}
 
     @Override
@@ -66,5 +80,16 @@ class Sentence {
         result = 31 * result + (positiveLiteral != null ? positiveLiteral.hashCode() : 0);
         result = 31 * result + (negativeLiteral != null ? negativeLiteral.hashCode() : 0);
         return result;
+    }
+}
+
+class FailureSentence extends Sentence {
+
+    FailureSentence(Literal[] literals) {
+        super(literals);
+    }
+
+    FailureSentence() {
+        this(new Literal[]{});
     }
 }

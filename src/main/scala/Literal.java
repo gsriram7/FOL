@@ -21,7 +21,10 @@ class Literal {
     }
 
     Term[] getTerms() {
-        return terms;
+        Term[] termsToReturn = new Term[terms.length];
+        for (int i = 0; i < terms.length; i++)
+            termsToReturn[i] = terms[i].getTerm();
+        return termsToReturn;
     }
 
     boolean canUnify() {
@@ -66,4 +69,5 @@ class Literal {
         result = 31 * result + numVariables;
         return result;
     }
+
 }

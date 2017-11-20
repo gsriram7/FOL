@@ -1,6 +1,6 @@
 
 abstract class Term {
-    private String name;
+    protected String name;
     protected Enum<Type> type;
 
     Term(String name, Type type) {
@@ -8,6 +8,7 @@ abstract class Term {
         this.type = type;
     }
 
+    abstract Term getTerm();
     String getName() {
         return name;
     }
@@ -42,11 +43,20 @@ class Constant extends Term {
         super(name, Type.CONSTANT);
     }
 
+    @Override
+    Term getTerm() {
+        return new Constant(name);
+    }
 }
 
 class Variable extends Term {
 
     Variable(String name) {
         super(name, Type.VARIABLE);
+    }
+
+    @Override
+    Term getTerm() {
+        return new Variable(name);
     }
 }
