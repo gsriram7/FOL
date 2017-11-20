@@ -115,6 +115,10 @@ class Unifier {
 
     }
 
+    static Sentence unify(Tuple tuple) {
+        return unifySentence(tuple.left, tuple.right, tuple.literal);
+    }
+
     static Literal substitute(HashMap<Term, Term> subs, Literal lit) {
         Term[] terms = lit.getTerms();
         Term[] substituted = new Term[terms.length];

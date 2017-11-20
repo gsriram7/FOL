@@ -33,7 +33,7 @@ public class KBTest {
     @Test
     public void shouldGetAllUnifiableForASentences() throws Exception {
         Sentence sentence = Parser.parseSentence("H(John) | D(x,y)");
-        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
+        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence, kb.sentences);
 
         System.out.println(map.toString());
         assertThat(map.size(), is(sentence.getLiterals().length));
@@ -48,7 +48,7 @@ public class KBTest {
     @Test
     public void shouldGetAllUnifiableInDecreasingOrderOfConstants() throws Exception {
         Sentence sentence = Parser.parseSentence("H(John) | D(Sid,Chill) | Q(y)");
-        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
+        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence, kb.sentences);
 
         System.out.println(map.toString());
         assertThat(map.size(), is(sentence.getLiterals().length));
@@ -60,7 +60,7 @@ public class KBTest {
     @Test
     public void shouldReturnNoUnifiableSentenceForANonMatchingSentence() throws Exception {
         Sentence sentence = Parser.parseSentence("P(John) | L(x,y)");
-        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
+        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence, kb.sentences);
 
         System.out.println(map.toString());
         assertThat(map.size(), is(0));
@@ -70,7 +70,7 @@ public class KBTest {
 
     @Test
     public void shouldGenerateNextChildrenTuples() throws Exception {
-        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | D(x,y)"));
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | D(x,y)"), kb.sentences);
 
         assertThat(children.size(), is(4));
         assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | D(x,y)"), Parser.parseSentence("~H(x) | F(x)"), Parser.parseLiteral("H(John)"))), is(true));
@@ -81,14 +81,14 @@ public class KBTest {
 
     @Test
     public void shouldNotNextGenerateNewChildrenIfASentenceCantBeUnified() throws Exception {
-        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("P(John) | L(x,y)"));
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("P(John) | L(x,y)"), kb.sentences);
 
         assertThat(children.size(), is(0));
     }
 
     @Test
     public void shouldFilterOutDuplicatedChildren() throws Exception {
-        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | H(John)"));
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | H(John)"), kb.sentences);
 
         assertThat(children.size(), is(2));
         assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | H(John)"), Parser.parseSentence("~H(x) | F(x)"), Parser.parseLiteral("H(John)"))), is(true));
@@ -97,7 +97,7 @@ public class KBTest {
 
     @Test
     public void shouldNextGenerateForPartiallyUnifiableSentence() throws Exception {
-        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("~B(x,y) | L(x,y)"));
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("~B(x,y) | L(x,y)"), kb.sentences);
 
         assertThat(children.size(), is(2));
         assertThat(children.contains(new Tuple(Parser.parseSentence("~B(x,y) | L(x,y)"), Parser.parseSentence("B(John,Joe)"), Parser.parseLiteral("~B(x,y)"))), is(true));
@@ -106,7 +106,7 @@ public class KBTest {
 
     @Test
     public void shouldReturnChildrenTuplesInDecreasingOrderOfScores() throws Exception {
-        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | D(Sid,Chill) | Q(y)"));
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | D(Sid,Chill) | Q(y)"), kb.sentences);
 
         assertThat(children.size(), is(5));
         assertThat(children.get(0).literal, is(Parser.parseLiteral("D(Sid,Chill)")));
@@ -114,5 +114,16 @@ public class KBTest {
         assertThat(children.get(2).literal, is(Parser.parseLiteral("H(John)")));
         assertThat(children.get(3).literal, is(Parser.parseLiteral("H(John)")));
         assertThat(children.get(4).literal, is(Parser.parseLiteral("Q(y)")));
+    }
+
+    @Test
+    public void shouldTestAsk() throws Exception {
+        Sentence s1 = Parser.parseSentence("~F(x,y) | P(x,y)");
+        Sentence s2 = Parser.parseSentence("F(Charlie,Bill)");
+
+        KB kb = KB.getKB(new Sentence[]{s1, s2});
+
+        assertThat(kb.ask(Parser.parseSentence("~P(Charlie,Bill)")), is(true));
+        assertThat(kb.ask(Parser.parseSentence("~P(Charlie,Bruce)")), is(false));
     }
 }
