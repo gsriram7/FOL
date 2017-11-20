@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -13,14 +14,20 @@ class Sentence {
         negativeLiteral = new HashMap<>();
         for (int i = 0; i < literals.length; i++) {
             this.literals[i] = literals[i];
+            this.literals[i] = new Literal(literals[i].name, literals[i].getTerms(), literals[i].isNegated);
             if (literals[i].isNegated)
-                negativeLiteral.put(literals[i].name, literals[i]);
-            else positiveLiteral.put(literals[i].name, literals[i]);
+                negativeLiteral.put(this.literals[i].name, this.literals[i]);
+            else positiveLiteral.put(this.literals[i].name, this.literals[i]);
         }
     }
 
     Literal[] getLiterals() {
-        return literals;
+        Literal[] toReturn = new Literal[literals.length];
+
+        for (int i = 0; i < literals.length; i++)
+            toReturn[i] = new Literal(literals[i].name, literals[i].getTerms(), literals[i].isNegated);
+
+        return toReturn;
     }
 
     boolean unifiable(Sentence s) {
@@ -39,18 +46,14 @@ class Sentence {
         else return false;
     }
 
-    Literal[] removeLiteral(Literal lit) {
-        Literal[] newLiterals = new Literal[this.literals.length - 1];
+    ArrayList<Literal> removeLiteral(Literal lit) {
+        ArrayList<Literal> newLits = new ArrayList<>();
 
-        int j = 0;
-        for (int i = 0; i < literals.length; i++) {
-            if (!literals[i].equals(lit)) {
-                newLiterals[j] = literals[i];
-                j++;
-            }
-        }
+        for (Literal literal : literals)
+            if (!literal.equals(lit))
+                newLits.add(new Literal(literal.name, literal.getTerms(), literal.isNegated));
 
-        return newLiterals;
+        return newLits;
     }
 
     boolean isEmpty(){return literals.length == 0;}

@@ -66,6 +66,15 @@ public class UnifierTest {
     }
 
     @Test
+    public void shouldSayFalseToSubstituteTwoVariableTermsOfSameSign() throws Exception {
+        Literal a = Parser.parseLiteral("H(x");
+        Literal b = Parser.parseLiteral("H(y)");
+        HashMap<Term, Term> subs = Unifier.findSubstitutionFor(a, b);
+
+        assertThat(Unifier.canSubstitute(subs, a, b), is(false));
+    }
+
+    @Test
     public void shouldSayTrueToSubstituteTwoComplexVariableTerms() throws Exception {
         Literal a = Parser.parseLiteral("D(Jon,y)");
         Literal b = Parser.parseLiteral("~D(x,Blu)");
@@ -90,5 +99,34 @@ public class UnifierTest {
         HashMap<Term, Term> subs = Unifier.findSubstitutionFor(a, b);
 
         assertThat(Unifier.applySubstitution(subs, a, b), is(false));
+    }
+
+    @Test
+    public void shouldSubstituteLiteralWithTerms() throws Exception {
+        Literal a = Parser.parseLiteral("D(Jon,y)");
+        Literal b = Parser.parseLiteral("~D(x,Blu)");
+        HashMap<Term, Term> subs = Unifier.findSubstitutionFor(a, b);
+
+        assertThat(Unifier.substitute(subs, Parser.parseLiteral("~B(x,y)")), is(Parser.parseLiteral("~B(Jon,Blu)")));
+    }
+
+    @Test
+    public void shouldNotSubstituteTermsIfTheyAreDifferent() throws Exception {
+        Literal a = Parser.parseLiteral("D(Jon,y)");
+        Literal b = Parser.parseLiteral("~D(x,Blu)");
+        HashMap<Term, Term> subs = Unifier.findSubstitutionFor(a, b);
+
+        assertThat(Unifier.substitute(subs, Parser.parseLiteral("~B(u,v)")), is(Parser.parseLiteral("~B(u,v)")));
+
+    }
+
+    @Test
+    public void shouldNotUnifyTwoInCompatibleSentences() throws Exception {
+        Sentence s1 = Unifier.unifySentence(Parser.parseSentence("H(John)"), Parser.parseSentence("~D(x,y) | H(Blu)"), Parser.parseLiteral("H(John)"));
+        Sentence s2 = Unifier.unifySentence(Parser.parseSentence("H(John)"), Parser.parseSentence("~D(x,y) | ~H(x)"), Parser.parseLiteral("H(John)"));
+
+        assertThat(s1 instanceof FailureSentence, is(true));
+        assertThat(s2 instanceof FailureSentence, is(false));
+        assertThat(s2, is(Parser.parseSentence("~D(John,y)")));
     }
 }

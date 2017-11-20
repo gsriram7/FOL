@@ -102,6 +102,23 @@ public class SentenceTest {
     }
 
     @Test
+    public void shouldRemoveALiteralFromSentence() throws Exception {
+        Sentence sentence = Parser.parseSentence("~D(x,y) | ~Q(y) | C(x,y)");
+
+        assertThat(sentence.removeLiteral(Parser.parseLiteral("~Q(y)")).size(), is(2));
+        assertThat(sentence.removeLiteral(Parser.parseLiteral("~Q(y)")).contains(Parser.parseLiteral("~Q(y)")), is(false));
+        assertThat(sentence.removeLiteral(Parser.parseLiteral("~E(y)")).size(), is(3));
+    }
+
+    @Test
+    public void shouldRemoveAConstantLiteralFromSentence() throws Exception {
+        Sentence sentence = Parser.parseSentence("~D(x,y) | ~H(Jon)");
+
+        assertThat(sentence.removeLiteral(Parser.parseLiteral("~H(Jon)")).size(), is(1));
+        assertThat(sentence.removeLiteral(Parser.parseLiteral("~H(Jon)")).get(0), is(Parser.parseLiteral("~D(x,y)")));
+    }
+
+    @Test
     public void shouldTestUnifiableWithSampleInput() throws Exception {
         File file = new File(this.getClass().getResource("ip1.txt").getFile());
         BufferedReader br = new BufferedReader(new FileReader(file));
