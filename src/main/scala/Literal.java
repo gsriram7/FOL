@@ -1,9 +1,9 @@
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-class Literal {
+class Literal implements Comparable<Literal> {
     String name;
-    Term[] terms;
+    private Term[] terms;
     boolean isNegated;
     private final int numTerms;
     int numConstants = 0;
@@ -70,4 +70,8 @@ class Literal {
         return result;
     }
 
+    @Override
+    public int compareTo(Literal o) {
+        return Integer.compare(o.numConstants, numConstants);
+    }
 }

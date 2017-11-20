@@ -1,18 +1,18 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeMap;
 
 public class KB {
 
     Sentence[] original;
     ArrayList<Sentence> sentences;
 
-    public KB(Sentence[] original, ArrayList<Sentence> sentences) {
+    KB(Sentence[] original, ArrayList<Sentence> sentences) {
         this.original = original;
         this.sentences = sentences;
     }
 
-    HashMap<Literal, ArrayList<Sentence>> getUnifiableSentences(Sentence s) {
-        HashMap<Literal, ArrayList<Sentence>> litToSent = new HashMap<>();
+    TreeMap<Literal, ArrayList<Sentence>> getUnifiableSentences(Sentence s) {
+        TreeMap<Literal, ArrayList<Sentence>> litToSent = new TreeMap<>();
         Literal[] literals = s.getLiterals();
 
         for (Literal literal : literals) {

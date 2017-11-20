@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
@@ -35,7 +36,7 @@ public class KBTest {
     @Test
     public void shouldGetAllUnifiableForASentences() throws Exception {
         Sentence sentence = Parser.parseSentence("H(John) | D(x,y)");
-        HashMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
+        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
 
         System.out.println(map.toString());
         assertThat(map.size(), is(sentence.getLiterals().length));
@@ -48,9 +49,21 @@ public class KBTest {
     }
 
     @Test
+    public void shouldGetAllUnifiableInDecreasingOrderOfConstants() throws Exception {
+        Sentence sentence = Parser.parseSentence("H(John) | D(Sid,Chill) | Q(y)");
+        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
+
+        System.out.println(map.toString());
+        assertThat(map.size(), is(sentence.getLiterals().length));
+        assertThat(map.firstKey(), is(Parser.parseLiteral("D(Sid,Chill)")));
+        assertThat(map.higherKey(Parser.parseLiteral("D(Sid,Chill)")), is(Parser.parseLiteral("H(John)")));
+        assertThat(map.lastKey(), is(Parser.parseLiteral("Q(y)")));
+    }
+
+    @Test
     public void shouldReturnNoUnifiableSentenceForANonMatchingSentence() throws Exception {
         Sentence sentence = Parser.parseSentence("P(John) | L(x,y)");
-        HashMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
+        TreeMap<Literal, ArrayList<Sentence>> map = kb.getUnifiableSentences(sentence);
 
         System.out.println(map.toString());
         assertThat(map.size(), is(0));
