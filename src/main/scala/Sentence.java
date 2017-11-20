@@ -7,18 +7,30 @@ class Sentence {
     Literal[] literals;
     HashMap<String, Literal> positiveLiteral;
     HashMap<String, Literal> negativeLiteral;
+    final int score;
 
     Sentence(Literal[] literals) {
+        int score = 0;
         this.literals = new Literal[literals.length];
         positiveLiteral = new HashMap<>();
         negativeLiteral = new HashMap<>();
         for (int i = 0; i < literals.length; i++) {
-            this.literals[i] = literals[i];
+            score += computeScore(literals[i].numConstants, literals[i].numVariables);
+
             this.literals[i] = new Literal(literals[i].name, literals[i].getTerms(), literals[i].isNegated);
+
             if (literals[i].isNegated)
                 negativeLiteral.put(this.literals[i].name, this.literals[i]);
             else positiveLiteral.put(this.literals[i].name, this.literals[i]);
         }
+        this.score = score;
+    }
+
+    private int computeScore(int constants, int variable) {
+        if (variable == 0)
+            return constants*10;
+        else
+            return 2*constants;
     }
 
     Literal[] getLiterals() {
@@ -56,7 +68,9 @@ class Sentence {
         return newLits;
     }
 
-    boolean isEmpty(){return literals.length == 0;}
+    boolean isEmpty() {
+        return literals.length == 0;
+    }
 
     @Override
     public String toString() {

@@ -4,14 +4,11 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class KBTest {
 
@@ -69,5 +66,53 @@ public class KBTest {
         assertThat(map.size(), is(0));
         assertThat(map.containsKey(Parser.parseLiteral("P(John)")), is(false));
         assertThat(map.containsKey(Parser.parseLiteral("L(x,y)")), is(false));
+    }
+
+    @Test
+    public void shouldGenerateNextChildrenTuples() throws Exception {
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | D(x,y)"));
+
+        assertThat(children.size(), is(4));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | D(x,y)"), Parser.parseSentence("~H(x) | F(x)"), Parser.parseLiteral("H(John)"))), is(true));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | D(x,y)"), Parser.parseSentence("~D(x,y) | ~H(y)"), Parser.parseLiteral("H(John)"))), is(true));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | D(x,y)"), Parser.parseSentence("~D(x,y) | ~H(y)"), Parser.parseLiteral("D(x,y)"))), is(true));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | D(x,y)"), Parser.parseSentence("~D(x,y) | ~Q(y) | C(x,y)"), Parser.parseLiteral("D(x,y)"))), is(true));
+    }
+
+    @Test
+    public void shouldNotNextGenerateNewChildrenIfASentenceCantBeUnified() throws Exception {
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("P(John) | L(x,y)"));
+
+        assertThat(children.size(), is(0));
+    }
+
+    @Test
+    public void shouldFilterOutDuplicatedChildren() throws Exception {
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | H(John)"));
+
+        assertThat(children.size(), is(2));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | H(John)"), Parser.parseSentence("~H(x) | F(x)"), Parser.parseLiteral("H(John)"))), is(true));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("H(John) | H(John)"), Parser.parseSentence("~D(x,y) | ~H(y)"), Parser.parseLiteral("H(John)"))), is(true));
+    }
+
+    @Test
+    public void shouldNextGenerateForPartiallyUnifiableSentence() throws Exception {
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("~B(x,y) | L(x,y)"));
+
+        assertThat(children.size(), is(2));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("~B(x,y) | L(x,y)"), Parser.parseSentence("B(John,Joe)"), Parser.parseLiteral("~B(x,y)"))), is(true));
+        assertThat(children.contains(new Tuple(Parser.parseSentence("~B(x,y) | L(x,y)"), Parser.parseSentence("B(John,Alice)"), Parser.parseLiteral("~B(x,y)"))), is(true));
+    }
+
+    @Test
+    public void shouldReturnChildrenTuplesInDecreasingOrderOfScores() throws Exception {
+        ArrayList<Tuple> children = kb.getNextChildren(Parser.parseSentence("H(John) | D(Sid,Chill) | Q(y)"));
+
+        assertThat(children.size(), is(5));
+        assertThat(children.get(0).literal, is(Parser.parseLiteral("D(Sid,Chill)")));
+        assertThat(children.get(1).literal, is(Parser.parseLiteral("D(Sid,Chill)")));
+        assertThat(children.get(2).literal, is(Parser.parseLiteral("H(John)")));
+        assertThat(children.get(3).literal, is(Parser.parseLiteral("H(John)")));
+        assertThat(children.get(4).literal, is(Parser.parseLiteral("Q(y)")));
     }
 }

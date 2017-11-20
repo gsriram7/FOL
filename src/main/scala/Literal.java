@@ -20,6 +20,10 @@ class Literal implements Comparable<Literal> {
         }
     }
 
+    public Literal(Literal literal) {
+        this(literal.name, literal.getTerms(), literal.isNegated);
+    }
+
     Term[] getTerms() {
         Term[] termsToReturn = new Term[terms.length];
         for (int i = 0; i < terms.length; i++)

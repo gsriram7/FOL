@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.*;
 
 public class KB {
 
@@ -26,6 +25,27 @@ public class KB {
         }
 
         return litToSent;
+    }
+
+    ArrayList<Tuple> getNextChildren(Sentence s) {
+        TreeMap<Literal, ArrayList<Sentence>> sents = getUnifiableSentences(s);
+        HashSet<Tuple> addedTuples = new HashSet<>();
+        ArrayList<Tuple> tuples = new ArrayList<>();
+
+        for (Map.Entry<Literal, ArrayList<Sentence>> entry : sents.entrySet()) {
+            ArrayList<Sentence> ss = entry.getValue();
+            for (Sentence sentence : ss) {
+                Tuple tuple = new Tuple(s, sentence, entry.getKey());
+                if (!addedTuples.contains(tuple)) {
+                    addedTuples.add(tuple);
+                    tuples.add(tuple);
+                }
+            }
+        }
+
+        tuples.sort(Utils.getComparatorForTuples());
+
+        return tuples;
     }
 
     boolean infer(Query query) {

@@ -4,12 +4,9 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -116,6 +113,17 @@ public class SentenceTest {
 
         assertThat(sentence.removeLiteral(Parser.parseLiteral("~H(Jon)")).size(), is(1));
         assertThat(sentence.removeLiteral(Parser.parseLiteral("~H(Jon)")).get(0), is(Parser.parseLiteral("~D(x,y)")));
+    }
+
+    @Test
+    public void shouldReturnScoreBasedOnNumberOfConstants() throws Exception {
+        Sentence sentence1 = Parser.parseSentence("~D(Bill,Jon) | ~H(Jon)");
+        Sentence sentence2 = Parser.parseSentence("~D(x,Jon) | ~H(x)");
+        Sentence sentence3 = Parser.parseSentence("~D(x,y) | ~H(x)");
+
+        assertThat(sentence1.score, is(30));
+        assertThat(sentence2.score, is(2));
+        assertThat(sentence3.score, is(0));
     }
 
     @Test
