@@ -85,7 +85,7 @@ class Sentence {
 
 class FailureSentence extends Sentence {
 
-    FailureSentence(Literal[] literals) {
+    private FailureSentence(Literal[] literals) {
         super(literals);
     }
 
