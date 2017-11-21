@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-class Literal implements Comparable<Literal> {
+class Literal {
     String name;
     private Term[] terms;
     boolean isNegated;
@@ -74,8 +74,4 @@ class Literal implements Comparable<Literal> {
         return result;
     }
 
-    @Override
-    public int compareTo(Literal o) {
-        return Integer.compare(o.numConstants, numConstants);
-    }
 }

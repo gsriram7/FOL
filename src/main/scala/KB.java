@@ -12,8 +12,8 @@ public class KB {
         pool = new HashSet<>(sentences);
     }
 
-    TreeMap<Literal, ArrayList<Sentence>> getUnifiableSentences(Sentence s, ArrayList<Sentence> sents) {
-        TreeMap<Literal, ArrayList<Sentence>> litToSent = new TreeMap<>();
+    HashMap<Literal, ArrayList<Sentence>> getUnifiableSentences(Sentence s, ArrayList<Sentence> sents) {
+        HashMap<Literal, ArrayList<Sentence>> litToSent = new HashMap<>();
         Literal[] literals = s.getLiterals();
 
         for (Literal literal : literals) {
@@ -30,7 +30,7 @@ public class KB {
     }
 
     ArrayList<Tuple> getNextChildren(Sentence s, ArrayList<Sentence> sen) {
-        TreeMap<Literal, ArrayList<Sentence>> sents = getUnifiableSentences(s, sen);
+        HashMap<Literal, ArrayList<Sentence>> sents = getUnifiableSentences(s, sen);
         HashSet<Tuple> addedTuples = new HashSet<>();
         ArrayList<Tuple> tuples = new ArrayList<>();
 
@@ -50,7 +50,10 @@ public class KB {
         return tuples;
     }
 
-    boolean ask(ArrayList<Sentence> sentences, HashSet<Sentence> set, Sentence a) {
+    boolean ask(ArrayList<Sentence> sentences, HashSet<Sentence> set, Sentence a, int depth) {
+
+        if (depth <= 0)
+            return false;
 
         if (!(a instanceof FailureSentence) && a.isEmpty())
             return true;
@@ -58,9 +61,7 @@ public class KB {
         if (a instanceof FailureSentence)
             return false;
 
-        if (set.contains(a))
-            return true;
-        else {
+        if (!set.contains(a)){
             sentences.add(a);
             set.add(a);
         }
@@ -69,15 +70,12 @@ public class KB {
 
         for (Tuple child : children) {
             Sentence unified = Unifier.unify(child);
-            boolean isPossible = ask(sentences, set, unified);
-            if (isPossible)
+            boolean isPossible = ask(sentences, set, unified, depth - 1);
+            if (isPossible) {
+                System.out.println("["+child.left +"]  ::  ["+child.right+"]\t-->\t"+unified+"");
                 return true;
+            }
         }
-
-        return false;
-    }
-
-    boolean infer(Query query) {
 
         return false;
     }
@@ -99,6 +97,6 @@ public class KB {
         newSent.addAll(sentences);
         HashSet<Sentence> set = new HashSet<>(pool);
 
-        return ask(newSent, set, s);
+        return ask(newSent, set, s, 10);
     }
 }

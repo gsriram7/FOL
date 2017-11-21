@@ -1,6 +1,9 @@
 import java.util.Comparator;
+import java.util.Random;
 
 class Utils {
+
+    static Random random = new Random(1);
 
     static Comparator<Tuple> getComparatorForTuples() {
         return new Comparator<Tuple>() {
@@ -14,6 +17,10 @@ class Utils {
             }
 
         };
+    }
+
+    static int getRandomNumber() {
+        return random.nextInt() * -1;
     }
 
 }

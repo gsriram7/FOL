@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 class Unifier {
@@ -94,7 +95,12 @@ class Unifier {
         if (!a.unifiable(b))
             return new FailureSentence();
 
-        Literal bLit = Arrays.stream(b.getLiterals()).filter(l -> l.name.equals(aLit.name) && (aLit.isNegated != l.isNegated)).collect(Collectors.toList()).get(0);
+        List<Literal> list = Arrays.stream(b.getLiterals()).filter(l -> l.name.equals(aLit.name) && (aLit.isNegated != l.isNegated)).collect(Collectors.toList());
+
+        if (list.isEmpty())
+            return new FailureSentence();
+
+        Literal bLit = list.get(0);
         HashMap<Term, Term> substitutions = findSubstitutionFor(aLit, bLit);
 
         if (!applySubstitution(substitutions, aLit, bLit))
