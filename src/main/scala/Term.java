@@ -1,7 +1,7 @@
 
 abstract class Term {
-    protected String name;
-    protected Enum<Type> type;
+    String name;
+    Enum<Type> type;
 
     Term(String name, Type type) {
         this.name = name;

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 class Sentence {
-    Literal[] literals;
+    private Literal[] literals;
     HashMap<String, Literal> positiveLiteral;
     HashMap<String, Literal> negativeLiteral;
     final int score;

@@ -6,14 +6,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class KBTest {
 
-    KB kb;
+    private KB kb;
 
     @Before
     public void setUp() throws Exception {
@@ -129,9 +128,9 @@ public class KBTest {
 
         assertThat(children.size(), is(5));
         List<Literal> literals = children.stream().map(t -> t.literal).collect(Collectors.toList());
-        assertThat(literals.stream().filter(l -> l.equals(Parser.parseLiteral("D(Sid,Chill)"))).count(), is(2l));
-        assertThat(literals.stream().filter(l -> l.equals(Parser.parseLiteral("H(John)"))).count(), is(2l));
-        assertThat(literals.stream().filter(l -> l.equals(Parser.parseLiteral("Q(y)"))).count(), is(1l));
+        assertThat(literals.stream().filter(l -> l.equals(Parser.parseLiteral("D(Sid,Chill)"))).count(), is(2L));
+        assertThat(literals.stream().filter(l -> l.equals(Parser.parseLiteral("H(John)"))).count(), is(2L));
+        assertThat(literals.stream().filter(l -> l.equals(Parser.parseLiteral("Q(y)"))).count(), is(1L));
     }
 
     @Test
@@ -160,7 +159,7 @@ public class KBTest {
         assertThat(kb.ask(Parser.parseSentence("~A(Liz,Joe)")), is(false));
     }
 
-    KB getKB() {
+    private KB getKB() {
         Sentence s1 = Parser.parseSentence("~P(x,y) | ~A(y,z) | A(x,z)");
         Sentence s2 = Parser.parseSentence("~P(x,y) | A(x,y)");
         Sentence s3 = Parser.parseSentence("~M(x,y) | P(x,y)");
@@ -169,5 +168,46 @@ public class KBTest {
         Sentence s6 = Parser.parseSentence("F(Carlie,Bill)");
 
         return KB.getKB(new Sentence[]{s1, s2, s3, s4, s5, s6});
+    }
+
+    @Test
+    public void testInputFiles() throws Exception {
+        for (int j = 1; j <= 10; j++) {
+
+            String tt = Integer.toString(j);
+            String file = this.getClass().getResource("additional/input" + tt + ".txt").getFile();
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            int numQueries = Integer.parseInt(br.readLine());
+            Query[] queries = new Query[numQueries];
+
+            for (int i = 0; i < numQueries; i++) {
+                queries[i] = new Query(Parser.parseLiteral(br.readLine()));
+            }
+
+            int numRules = Integer.parseInt(br.readLine());
+            Sentence[] sentences = new Sentence[numRules];
+
+            for (int i = 0; i < numRules; i++) {
+                sentences[i] = Parser.parseSentence(br.readLine());
+            }
+
+            StringBuilder result = new StringBuilder();
+            for (Query query : queries) {
+                KB kb = KB.getKB(sentences);
+                boolean res = kb.ask(query.refute());
+                System.out.println(res);
+                result.append(String.valueOf(res).toUpperCase());
+            }
+
+            String op = this.getClass().getResource("additional/output" + tt + ".txt").getFile();
+            BufferedReader out = new BufferedReader(new FileReader(op));
+            String output = out.lines().reduce(String::concat).orElse("");
+
+            assertThat(result.toString(), is(output));
+
+            out.close();
+            br.close();
+        }
     }
 }

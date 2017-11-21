@@ -3,7 +3,7 @@ public class Tuple {
     Sentence right;
     Literal literal;
 
-    public Tuple(Sentence left, Sentence right, Literal literal) {
+    Tuple(Sentence left, Sentence right, Literal literal) {
         this.left = new Sentence(left.getLiterals());
         this.right = new Sentence(right.getLiterals());
         this.literal = new Literal(literal);

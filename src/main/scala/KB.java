@@ -1,10 +1,10 @@
 import java.util.*;
 
-public class KB {
+class KB {
 
-    Sentence[] original;
+    private Sentence[] original;
     ArrayList<Sentence> sentences;
-    HashSet<Sentence> pool;
+    private HashSet<Sentence> pool;
 
     KB(Sentence[] original, ArrayList<Sentence> sentences) {
         this.original = original;
@@ -50,7 +50,7 @@ public class KB {
         return tuples;
     }
 
-    boolean ask(ArrayList<Sentence> sentences, HashSet<Sentence> set, Sentence a, int depth) {
+    private boolean ask(ArrayList<Sentence> sentences, HashSet<Sentence> set, Sentence a, int depth) {
 
         if (depth <= 0)
             return false;
