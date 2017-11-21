@@ -5,7 +5,7 @@ import java.io.FileWriter;
 
 public class homework {
     public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new FileReader("input.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("/Users/selvaram/selva/FOL/src/main/scala/input.txt"));
 
         int numQueries = Integer.parseInt(br.readLine());
         Query[] queries = new Query[numQueries];
@@ -24,12 +24,13 @@ public class homework {
         br.close();
 
 
-        BufferedWriter out = new BufferedWriter(new FileWriter("output.txt"));
+        BufferedWriter out = new BufferedWriter(new FileWriter("/Users/selvaram/selva/FOL/src/main/scala/output.txt"));
 
-        StringBuilder result = new StringBuilder();
         for (Query query : queries) {
+            StringBuilder result = new StringBuilder();
             KB kb = KB.getKB(sentences);
             boolean res = kb.ask(query.refute());
+            System.out.println();
             out.write(result.append(String.valueOf(res).toUpperCase()).append("\n").toString());
         }
 
