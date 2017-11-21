@@ -72,7 +72,7 @@ class KB {
             Sentence unified = Unifier.unify(child);
             boolean isPossible = ask(sentences, set, unified, depth - 1);
             if (isPossible) {
-                System.out.println("["+child.left +"]  ::  ["+child.right+"]\t-->\t"+unified+"");
+//                System.out.println("["+child.left +"]  ::  ["+child.right+"]\t-->\t"+unified+"");
                 return true;
             }
         }
